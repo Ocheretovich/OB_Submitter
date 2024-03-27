@@ -1,6 +1,14 @@
 use crate::types::ChainType;
 use ethers::types::Address;
 
+pub fn get_server_port() -> u16 {
+    std::env::var("SERVER_PORT").unwrap().parse().unwrap()
+}
+
+pub fn get_no_private_key() -> bool {
+    std::env::var("SERVER_NO_PRIVATE_KEY").unwrap().parse().unwrap()
+}
+
 pub fn get_mainnet_rpc_urls() -> Vec<String> {
     let mainnet_rpc_urls = std::env::var("MAINNET_RPC_URLS").unwrap();
     mainnet_rpc_urls

@@ -1,0 +1,21 @@
+version: '3.8'
+
+networks:
+  # Specify the network for bridging
+  ob_submitter-network:
+    driver: bridge
+
+services:
+  submitter:
+    build: ./
+    command: /app/submitter
+    env_file:
+      - ./.env
+    volumes:
+      - './db:/app/db'
+    ports:
+      - '${SERVER_PORT}:${SERVER_PORT}'
+    restart: always
+    networks:
+      - ob_submitter-network
+
