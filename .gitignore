@@ -4,3 +4,4 @@
 db*
 logs*
 .env
+nginx

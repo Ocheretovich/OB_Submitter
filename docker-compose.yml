@@ -1,7 +1,6 @@
-version: '3.8'
+version: "3.8"
 
 networks:
-  # Specify the network for bridging
   ob_submitter-network:
     driver: bridge
 
@@ -12,10 +11,20 @@ services:
     env_file:
       - ./.env
     volumes:
-      - './db:/app/db'
+      - "./db:/app/db"
     ports:
-      - '${SERVER_PORT}:${SERVER_PORT}'
+      - "${SERVER_PORT}:${SERVER_PORT}"
     restart: always
     networks:
       - ob_submitter-network
 
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - "./nginx.default.conf:/etc/nginx/conf.d/default.conf"
+      - "./nginx/log:/var/log/nginx"
+    ports:
+      - "80:80"
+    restart: always
+    networks:
+      - ob_submitter-network
