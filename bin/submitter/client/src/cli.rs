@@ -59,11 +59,11 @@ pub struct Client<
 }
 
 impl<'a>
-Client<
-    State<'a, Keccak256Hasher, ProfitStateData>,
-    State<'a, Keccak256Hasher, BlocksStateData>,
-    LocalWallet,
->
+    Client<
+        State<'a, Keccak256Hasher, ProfitStateData>,
+        State<'a, Keccak256Hasher, BlocksStateData>,
+        LocalWallet,
+    >
 {
     pub fn new(
         wallet: Arc<LocalWallet>,
@@ -89,7 +89,13 @@ pub async fn run() -> Result<()> {
     dotenv().ok();
 
     let args = Args::parse();
-    let rpc_server_port = { if args.rpc_port == 0 { args.rpc_port } else { get_server_port() } };
+    let rpc_server_port = {
+        if args.rpc_port == 0 {
+            args.rpc_port
+        } else {
+            get_server_port()
+        }
+    };
     let mut rpc_server = JsonRpcServer::new();
 
     let file_appender = daily(format!("{}/logs", args.db_path), "submitter.log");
@@ -119,7 +125,13 @@ pub async fn run() -> Result<()> {
     );
 
     let private_key: String;
-    let no_private_key = { if args.no_private_key { args.no_private_key } else { get_no_private_key() } };
+    let no_private_key = {
+        if args.no_private_key {
+            args.no_private_key
+        } else {
+            get_no_private_key()
+        }
+    };
     if no_private_key {
         event!(Level::WARN, "No private key, can not submit root.");
         private_key =
@@ -178,7 +190,7 @@ pub async fn run() -> Result<()> {
     event!(Level::INFO, "The client is created.");
 
     let server = ServerBuilder::new()
-        .build(format!("127.0.0.1:{}", client.rpc_server_port))
+        .build(format!("0.0.0.0:{}", client.rpc_server_port))
         .await?;
     let addr = server.local_addr()?;
     let sled_db = Arc::new(sled::open(args.db_path.clone()).unwrap());
@@ -194,7 +206,7 @@ pub async fn run() -> Result<()> {
             profit_statistics_db: profit_statistics_db.clone(),
             txs_db: txs_db.clone(),
         }
-            .into_rpc(),
+        .into_rpc(),
     )?;
     if args.debug {
         rpc_server.add_mothod(
@@ -202,7 +214,7 @@ pub async fn run() -> Result<()> {
                 state: profit_state.clone(),
                 user_tokens_db: user_tokens_db.clone(),
             }
-                .into_rpc(),
+            .into_rpc(),
         )?;
         // tokio::spawn(insert_profit_by_count(100_0000, profit_state.clone()));
     }
@@ -226,7 +238,7 @@ pub async fn run() -> Result<()> {
             start_block_num1.clone(),
             tokens,
         )
-            .await,
+        .await,
     );
     let c_1 = contract.clone();
     tokio::spawn(async {
@@ -251,7 +263,7 @@ pub async fn run() -> Result<()> {
         storage: Default::default(),
         events: vec![],
     })
-        .unwrap();
+    .unwrap();
     std::future::pending::<()>().await;
     Ok(())
 }
