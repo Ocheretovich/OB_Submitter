@@ -65,7 +65,7 @@ export OP_DELAY_SECONDS=604800
 export COMMON_DELAY_SECONDS=900
 ```
 
-5. run submitter
+6. run submitter
 
 ```angular2html
 ./target/release/submitter
